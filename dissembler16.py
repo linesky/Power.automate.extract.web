@@ -6,12 +6,7 @@ import subprocess
 import shutil
 import os
 
-st1="""
-
-.text
-start:
-nop
-db  """
+st1=".text\r\nstart:\r\nnop\r\ndb "
 
 class BareboneBuilder:
     def __init__(self, root):
@@ -50,6 +45,7 @@ class BareboneBuilder:
         filename = tk.filedialog.askopenfilename(title="Select file")
         self.text_area.delete(1.0, tk.END)
         self.execute_command("cp  $1 /tmp/my.o".replace("$1",filename),False)
+        self.execute_command("chmod 777 /tmp/my.o",False)
         self.execute_command("objdump -M intel -D -b binary -mi386  -Maddr16,data16 /tmp/my.o",True)
 
     def run_kernel(self):
@@ -59,17 +55,18 @@ class BareboneBuilder:
         
         posss=st.find(tt)
         if posss>-1:
-            posss+=len(tt)
+            #posss+=len(tt)
             st=st[0:posss]
             
         print(st)
-        st2=st1+st+"\n\n"
-        f1=open("/tmp/out.asm","w")
+        st2=st1+st+"\n"
+        f1=open("/tmp/my.asm","w")
         f1.write(st2)
         f1.close
         self.text_area.insert(tk.END,tt)
         self.execute_command("rm /tmp/my.o",False)
-        self.execute_command("as86 -1 /tmp/out.asm -o /tmp/my.o",True)
+        self.execute_command("chmod 777 /tmp/my.o",False)
+        self.execute_command("as86 -1 /tmp/my.asm -o /tmp/my.o",True)
         self.execute_command("objdump -M intel -D -b binary -mi386  -Maddr16,data16 /tmp/my.o",True)
 
 
