@@ -6,7 +6,7 @@ import subprocess
 import shutil
 import os
 
-st1=".text\r\nstart:\r\nnop\r\ndb "
+st1="[bits 16]\norg 100h\nstart:\nnop\ndb "
 
 class BareboneBuilder:
     def __init__(self, root):
@@ -66,7 +66,7 @@ class BareboneBuilder:
         self.text_area.insert(tk.END,tt)
         self.execute_command("rm /tmp/my.o",False)
         self.execute_command("chmod 777 /tmp/my.o",False)
-        self.execute_command("as86 -1 /tmp/my.asm -o /tmp/my.o",True)
+        self.execute_command("nasm /tmp/my.asm -o /tmp/my.o",True)
         self.execute_command("objdump -M intel -D -b binary -mi386  -Maddr16,data16 /tmp/my.o",True)
 
 
